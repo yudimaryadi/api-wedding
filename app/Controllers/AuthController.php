@@ -18,15 +18,16 @@ class AuthController extends Controller
             'email' => ['required', 'str', 'trim', 'min:5', 'max:30'],
             'password' => ['required', 'str', 'trim', 'min:8', 'max:20']
         ]);
-
+        
         if ($valid->fails()) {
             return $json->error($valid->messages(), 400);
         }
-
+        // dd(Auth::attempt($valid->only(['email', 'password'])));
+        
         if (!Auth::attempt($valid->only(['email', 'password']))) {
             return $json->error(['unauthorized'], 401);
         }
-
+        
         $time = Time::factory()->getTimestamp();
         $token = JWT::encode(
             [
